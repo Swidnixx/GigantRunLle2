@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class WorldScroller : MonoBehaviour
 {
-    public Transform tile1, tile2;
+    public Transform fragment1, fragment2;
     public float speed;
+
+    public GameObject[] worldFragments;
 
     private void FixedUpdate()
     {
-        tile1.position -= new Vector3(speed, 0, 0);
-        tile2.position -= new Vector3(speed, 0, 0);
+        fragment1.position -= new Vector3(speed, 0, 0);
+        fragment2.position -= new Vector3(speed, 0, 0);
 
-        if(tile2.position.x <= 0)
+        if(fragment2.position.x <= 0)
         {
-            tile1.position = tile2.position + new Vector3(25, 0, 0);
+            GameObject fragmentToCreate = worldFragments[Random.Range(0,worldFragments.Length)];
+            Transform newFragment = Instantiate(
+                fragmentToCreate, fragment2.position + new Vector3(16, 0, 0), Quaternion.identity
+                ).transform;
 
-            var tmp = tile1;
-            tile1 = tile2;
-            tile2 = tmp;
+            Destroy(fragment1.gameObject);
+            fragment1 = fragment2;
+            fragment2 = newFragment;
         }
     }
 }

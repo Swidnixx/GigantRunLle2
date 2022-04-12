@@ -6,13 +6,17 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
 public class PlayerController : MonoBehaviour
 {
+    //Settings
     public float jumpSpeed = 10;
     public float liftingForce = 100;
 
+    //Dependencies
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
     private bool doubleJumped;
 
+
+    #region Unity Callbacks
     void OnValidate()
     {
         boxCollider = GetComponent<BoxCollider2D>();
@@ -21,7 +25,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-
     void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -42,17 +45,19 @@ public class PlayerController : MonoBehaviour
         {
             if (rb.velocity.y <= 0)
             {
-                rb.AddForce(new Vector2(0, liftingForce) * Time.deltaTime); 
+                rb.AddForce(new Vector2(0, liftingForce) * Time.deltaTime * -rb.velocity.y); 
             }
         }
         DrawRaycast();
     }
-    private void DrawRaycast()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.DrawLine(transform.position,
-            transform.position + Vector3.down * 1.1f);
+        if(collision.CompareTag("Obstacle"))
+        {
+            PlayerHit();
+        }
     }
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         Vector3 playerPos = transform.position;
         Gizmos.color = Color.white;
@@ -60,6 +65,19 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(playerPos + Vector3.down * 0.1f,
            boxCollider.bounds.size);
+    }
+    #endregion
+
+    #region Private Helper Methods
+    private void PlayerHit()
+    {
+        Debug.Log("Obstacle hit");
+        Debug.Break();
+    }
+    private void DrawRaycast()
+    {
+        Debug.DrawLine(transform.position,
+            transform.position + Vector3.down * 1.1f);
     }
     private bool IsGrounded()
     {
@@ -74,4 +92,5 @@ public class PlayerController : MonoBehaviour
 
         return hit.collider != null;
     }
+    #endregion
 }
