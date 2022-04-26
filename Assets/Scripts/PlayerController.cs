@@ -71,8 +71,7 @@ public class PlayerController : MonoBehaviour
     #region Private Helper Methods
     private void PlayerHit()
     {
-        Debug.Log("Obstacle hit");
-        Debug.Break();
+        GameManager.Instance.GameOver();
     }
     private void DrawRaycast()
     {

@@ -5,12 +5,13 @@ using UnityEngine;
 public class WorldScroller : MonoBehaviour
 {
     public Transform fragment1, fragment2;
-    public float speed;
 
     public GameObject[] worldFragments;
 
     private void FixedUpdate()
     {
+        float speed = GameManager.Instance.worldScrollingSpeed;
+
         fragment1.position -= new Vector3(speed, 0, 0);
         fragment2.position -= new Vector3(speed, 0, 0);
 
